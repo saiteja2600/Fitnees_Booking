@@ -86,7 +86,7 @@ def user_register(request):
         # Save user if no errors
         Register.objects.create(username=username, email=email, password=make_password(password))
         messages.success(request, 'Registration successful! Please log in.')
-        return redirect('Login')  # Ensure this name matches your URL pattern
+        return redirect('user_login')  # Ensure this name matches your URL pattern
 
     return render(request, 'user_panel/register.html')
 @login_required(login_url='user_login')
