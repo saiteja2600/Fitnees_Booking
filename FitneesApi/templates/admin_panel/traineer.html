@@ -1,0 +1,190 @@
+{% extends "admin_panel/base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <!-- Add Trainer Button -->
+    <div class="d-flex justify-content-end mb-3">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#trainerModal">
+            <i class="fa-solid fa-plus"></i> Add Trainer
+        </button>
+    </div>
+
+    <!-- Trainer Table -->
+    <div class="table-responsive">
+        <table id="trainerTable" class="table table-bordered table-hover align-middle bg-white shadow-sm mb-0 rounded text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trainer in trainers %}
+                <tr>
+                    <td>{{ trainer.T_name }}</td>
+                    <td>{{ trainer.T_email }}</td>
+                    <td>{{ trainer.T_phone }}</td>
+                    <td>
+                        
+                        <button 
+    class="btn btn-danger btn-sm delete-trainer-btn" 
+    data-url="{% url 'trainer_Delete' trainer.T_id %}">
+    <i class="fa-solid fa-trash"></i>
+</button>
+
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center">No trainers available</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="trainerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="trainerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content p-3  shadow-sm">
+            <div class="modal-header">
+                <h5 class="modal-title" id="trainerModalLabel">Add Trainer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="" class="trainee_form" novalidate>
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Name</label>
+                            <input type="text" name="T_name" class="form-control">
+                            <div class="invalid-feedback">Please enter a name.</div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="T_email" class="form-control">
+                            <div class="invalid-feedback">Please enter a valid email.</div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Phone</label>
+                            <input type="text" name="T_phone" class="form-control">
+                            <div class="invalid-feedback">Please enter a 10-digit phone number.</div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+       
+        const today = new Date().toISOString().split('T')[0];
+    $('#T_Date').attr('min', today);
+
+        $(".trainee_form").on("submit", function (e) {
+            let isValid = true;
+    
+            // Clear all previous errors
+            $(this).find("input").removeClass("is-invalid");
+            
+    
+            // Validate empty fields
+            const requiredFields = [
+                'T_name',
+                'T_email',
+                'T_phone',
+              
+            ];
+    
+            requiredFields.forEach(function (fieldName) {
+                const input = $(`input[name="${fieldName}"]`);
+                if (!input.val().trim()) {
+                    input.addClass("is-invalid");
+                    isValid = false;
+                }
+            });
+    
+            // Phone number: 10 digits only
+            const phone = $("input[name='T_phone']");
+            const phoneVal = phone.val().trim();
+            if (phoneVal && !/^\d{10}$/.test(phoneVal)) {
+                phone.addClass("is-invalid");
+                isValid = false;
+            }
+    
+            // Email format check
+            const email = $("input[name='T_email']");
+            const emailVal = email.val().trim();
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailVal && !emailPattern.test(emailVal)) {
+                email.addClass("is-invalid");
+                isValid = false;
+            }
+    
+           
+            if (!isValid) {
+                e.preventDefault(); // prevent form from submitting
+            }
+        });
+    
+        // Remove invalid class on input/change
+        $("input").on("input change", function () {
+            $(this).removeClass("is-invalid");
+        });
+    });
+
+
+    {% if messages %}
+    {% for message in messages %}
+        Swal.fire({
+            title: "{{ message.tags|title }}",
+            text: "{{ message }}",
+            icon: "{{ message.tags }}",
+            confirmButtonText: "ok",
+            timer: 3000,  // 3 seconds
+        timerProgressBar: true
+        });
+    {% endfor %}
+{% endif %}
+
+
+{% comment %} Delete Trainer {% endcomment %}
+$('.delete-trainer-btn').click(function (e) {
+    e.preventDefault();
+    const deleteUrl = $(this).data('url');
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This action will delete the trainer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = deleteUrl;
+        }
+    });
+});
+
+  
+</script>
+{% endblock scripts %}

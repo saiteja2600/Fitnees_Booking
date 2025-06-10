@@ -1,0 +1,50 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+
+.user-login{
+    background-image: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.9)),url('../../images/user_pannel/banner.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    
+}
+
+.login-box {
+    background: linear-gradient(rgba(80, 105, 138, 0.877), rgba(112, 109, 109, 0.5));
+    width: 350px;
+    padding: 20px;
+    border-radius: 15px;
+}
+.user-title{
+    color: #fff;
+        font-size: 24px;
+        font-weight: bold;
+}
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+}
+
+
+.links p {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.register-link {
+    color: #ffd700;
+    text-decoration: underline;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.register-link:hover {
+    color: #fff;
+    text-decoration: none;
+}

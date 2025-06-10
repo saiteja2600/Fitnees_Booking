@@ -1,0 +1,204 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Admin Navbar Styling */
+.admin-nav {
+    background-color: #1f1f2e;
+    padding: 10px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.admin-nav .navbar-brand {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-nav .navbar-brand .logo {
+    width: 40px;
+    height: 40px;
+}
+
+.admin-nav .nav-link {
+    color: #dcdcdc;
+    margin-right: 20px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.admin-nav .nav-link:hover,
+.admin-nav .nav-link.active {
+    color: #ffffff;
+}
+
+/* Right align menu items */
+.admin-nav .navbar-collapse {
+    justify-content: flex-end;
+}
+
+/* Toggler custom (optional) */
+.navbar-toggler {
+    border: none;
+    outline: none;
+}
+
+.navbar-toggler-icon {
+    filter: invert(1);
+    /* Makes icon white */
+}
+
+.admin-nav .navbar-nav {
+    gap: 20px;
+}
+
+.admin-nav .btn {
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 8px;
+}
+
+
+.bg-gradient-blue {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+}
+
+.bg-gradient-green {
+    background: linear-gradient(135deg, #28a745, #218838);
+    color: white;
+}
+
+.bg-gradient-orange {
+    background: linear-gradient(135deg, #fd7e14, #e8590c);
+    color: white;
+}
+
+.bg-gradient-pink {
+    background: linear-gradient(135deg, #e83e8c, #d63384);
+    color: white;
+}
+
+.dashboard-card .icon i {
+    font-size: 2.5rem;
+    color: white;
+}
+
+.dashboard-card {
+    border-radius: 12px;
+    background-color: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    color: white;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Styling */
+.card .table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.card .table td {
+    vertical-align: middle;
+    font-size: 0.88rem;
+}
+
+.card .btn {
+    font-size: 0.75rem;
+    padding: 3px 6px;
+}
+
+.card .btn i {
+    font-size: 0.85rem;
+    margin-right: 2px;
+}
+
+.table-responsive {
+    overflow-x: unset !important;
+}
+
+/* Footer */
+.footer {
+    background-color: #1f1f2e;
+    border-top: 1px solid #333;
+}
+
+.footer p {
+    font-size: 0.95rem;
+    margin-bottom: 0;
+    color: #dcdcdc;
+}
+
+.footer .social-icons a {
+    color: #dcdcdc;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.footer .social-icons a:hover {
+    color: #ffffff;
+    transform: scale(1.2);
+}
+
+
+td.description-cell {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Calendar styling */
+.calendar-container {
+    background: linear-gradient(45deg, #43e97a6b, #00f3c670);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* FullCalendar custom colors */
+.fc .fc-toolbar-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1f1f2e;
+}
+
+.fc-button {
+    background-color: #077ce286 !important;
+    border: none !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    padding: 6px 12px !important;
+}
+
+.fc-button:hover {
+    background-color: #17a1c7b9 !important;
+}
+
+
+.fc-daygrid-event {
+    background-color: #f953c7af !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 2px 4px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    background: linear-gradient(45deg, #f953c6, #b91d73);
+}
+
+
+.fc-daygrid-event:hover {
+    opacity: 0.9;
+
+}

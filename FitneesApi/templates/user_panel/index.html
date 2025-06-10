@@ -1,0 +1,106 @@
+{% extends 'user_panel/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-12 col-sm-6">
+            <div class="dashboard-card bg-gradient-blue d-flex align-items-center p-3 shadow-sm rounded">
+                <div class="icon me-3 fs-3 text-white">
+                    <i class="fa-solid fa-calendar-days"></i>
+                </div>
+                <div class="info text-end w-100 text-white">
+                    <h4 class="mb-0">{{ upcoming_classes|length }}</h4>
+                    <p class="mb-0">Upcoming Classes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6">
+            <div class="dashboard-card bg-gradient-green d-flex align-items-center p-3 shadow-sm rounded">
+                <div class="icon me-3 fs-3 text-white">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="info text-end w-100 text-white">
+                    <h4 class="mb-0">{{ scheduled_classes|length }}</h4>
+                    <p class="mb-0">Scheduled Today</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Classes Table -->
+    <div class="card shadow border-0 mb-4">
+        <div class="card-header bg-primary text-white">
+            <h6 class="mb-0">Upcoming Classes</h6>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Class</th>
+                            <th>Trainer</th>
+                            <th>Date</th>
+                            <th>Start</th>
+                            <th>End</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cls in upcoming_classes %}
+                        <tr>
+                            <td>{{ cls.C_name }}</td>
+                            <td>{{ cls.C_trainer.T_name }}</td>
+                            <td>{{ cls.C_date }}</td>
+                            <td>{{ cls.C_start_time }}</td>
+                            <td>{{ cls.C_end_time }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No upcoming classes.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scheduled Classes Table -->
+    <div class="card shadow border-0">
+        <div class="card-header bg-success text-white">
+            <h6 class="mb-0">Scheduled Classes (Today)</h6>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Class</th>
+                            <th>Trainer</th>
+                            <th>Date</th>
+                            <th>Start</th>
+                            <th>End</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cls in scheduled_classes %}
+                        <tr>
+                            <td>{{ cls.C_name }}</td>
+                            <td>{{ cls.C_trainer.T_name }}</td>
+                            <td>{{ cls.C_date }}</td>
+                            <td>{{ cls.C_start_time }}</td>
+                            <td>{{ cls.C_end_time }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No scheduled classes today.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
