@@ -28,8 +28,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('Fitnees-Studio/', views.global_home, name='home_page'),
      path('', views.global_home, name='global_home'),
-    path('Fitnees-Studio/', include('Fitnees_Admin.urls')),
-    path('Fitnees-Studio/', include('Fitnees.urls')),
+     path('Fitnees-Studio/admin/', include('Fitnees_Admin.urls')),
+   path('Fitnees-Studio/user/', include('Fitnees.urls')),
 ]
 urlpatterns += staticfiles_urlpatterns()
 
