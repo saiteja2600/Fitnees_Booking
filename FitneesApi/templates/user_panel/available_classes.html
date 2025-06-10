@@ -1,0 +1,220 @@
+{% extends "user_panel/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header text-center">
+            <h4>Book Your Class</h4>
+        </div>
+        <div class="card-body row">
+            <div class="col-md-6 border-end">
+                <form method="post" id='bookingForm'>
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="classSelect" class="form-label">Select Class</label>
+                        <select id="classSelect" name="class_name" class="form-select">
+                            <option value="">-- Select Class --</option>
+                            {% for class_obj in classes %}
+                                <option value="{{ class_obj.C_name }}">{{ class_obj.C_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="invalid-feedback">Please select a class.</div>
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="dateSelect" class="form-label">Select Date</label>
+                        <select id="dateSelect" name="selected_date" class="form-select" disabled>
+                            <option value="">-- Select Date --</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a date.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="trainerSelect" class="form-label">Select Trainer & Time</label>
+                        <select id="trainerSelect" name="classes" class="form-select" disabled>
+                            <option value="">-- Select Trainer & Time --</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a trainer and time.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="client_name" class="form-label">Your Name</label>
+                        <input type="text" id="client_name" name="client_name" class="form-control">
+                        <div class="invalid-feedback">Please enter name.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="client_email" class="form-label">Your Email</label>
+                        <input type="text" id="client_email" name="client_email" class="form-control">
+                        <div class="invalid-feedback">Please enter email.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Book Now</button>
+                </form>
+            </div>
+
+            <div class="col-md-6">
+                <h5>Selected Class Details</h5>
+                <div id="class_details">
+                    <p class="text-muted">Select a class and date to view details.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+    $(document).ready(function () {
+        $('#bookingForm').on('submit', function (e) {
+            let isValid = true;
+    
+            $('input, select').removeClass('is-invalid');
+    
+            const classSelected = $('#classSelect').val();
+            if (!classSelected) {
+                $('#classSelect').addClass('is-invalid');
+                isValid = false;
+            }
+    
+            const dateSelected = $('#dateSelect').val();
+            if (!dateSelected) {
+                $('#dateSelect').addClass('is-invalid');
+                isValid = false;
+            }
+
+            const classInstanceSelected = $('#trainerSelect').val();
+            if (!classInstanceSelected) {
+                $('#trainerSelect').addClass('is-invalid');
+                isValid = false;
+            }
+    
+            const clientName = $('#client_name').val().trim();
+            if (!clientName) {
+                $('#client_name').addClass('is-invalid');
+                isValid = false;
+            }
+    
+            const clientEmail = $('#client_email').val().trim();
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!clientEmail || !emailPattern.test(clientEmail)) {
+                $('#client_email').addClass('is-invalid');
+                isValid = false;
+            }
+    
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    
+        $('input, select').on('input change', function () {
+            $(this).removeClass('is-invalid');
+        });
+
+        $('#classSelect').on('change', function () {
+            var selectedClass = $(this).val();
+            
+            $('#dateSelect').empty().append('<option value="">-- Select Date --</option>').prop('disabled', true);
+            $('#trainerSelect').empty().append('<option value="">-- Select Trainer & Time --</option>').prop('disabled', true);
+            $('#class_details').html('<p class="text-muted">Select a class and date to view details.</p>');
+
+            if (selectedClass) {
+                $.ajax({
+                    url: "{% url 'get_dates_by_class' %}",
+                    data: {
+                        'class_name': selectedClass
+                    },
+                    success: function (data) {
+                        if (data.length > 0) {
+                            data.forEach(function (date_obj) {
+                                $('#dateSelect').append(
+                                    `<option value="${date_obj.date}">${date_obj.display}</option>`
+                                );
+                            });
+                            $('#dateSelect').prop('disabled', false);
+                        } else {
+                            $('#class_details').html('<p class="text-muted">No dates available for this class.</p>');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error fetching dates:", error);
+                        $('#class_details').html('<p class="text-danger">Error loading dates. Please try again.</p>');
+                    }
+                });
+            }
+        });
+    
+        $('#dateSelect').on('change', function () {
+            var selectedClass = $('#classSelect').val();
+            var selectedDate = $(this).val();
+
+            $('#trainerSelect').empty().append('<option value="">-- Select Trainer & Time --</option>').prop('disabled', true);
+            $('#class_details').html('<p class="text-muted">Select a trainer and time to view details.</p>');
+
+            if (selectedClass && selectedDate) {
+                $.ajax({
+                    url: "{% url 'get_trainers_and_times_by_class_and_date' %}",
+                    data: {
+                        'class_name': selectedClass,
+                        'selected_date': selectedDate
+                    },
+                    success: function (data) {
+                        if (data.length > 0) {
+                            data.forEach(function (instance) {
+                                $('#trainerSelect').append(
+                                    `<option value="${instance.C_id}" 
+                                             data-trainer-id="${instance.T_id}"
+                                             data-description="${instance.C_description}">
+                                        ${instance.T_name} (${instance.C_start_time} - ${instance.C_end_time})
+                                    </option>`
+                                );
+                            });
+                            $('#trainerSelect').prop('disabled', false);
+                            updateClassDetails($('#trainerSelect').find('option:selected'));
+                        } else {
+                            $('#class_details').html('<p class="text-muted">No trainers or times available for this class on the selected date.</p>');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error fetching trainers and times:", error);
+                        $('#class_details').html('<p class="text-danger">Error loading trainers and times. Please try again.</p>');
+                    }
+                });
+            }
+        });
+
+        $('#trainerSelect').on('change', function() {
+            updateClassDetails($(this).find('option:selected'));
+        });
+
+        function updateClassDetails(selectedOption) {
+            if (selectedOption.val()) {
+                const trainerName = selectedOption.text().split('(')[0].trim();
+                const timeSlot = selectedOption.text().split('(')[1].replace(')', '').trim();
+                const description = selectedOption.data('description');
+                
+                let detailsHtml = `
+                    <p><strong>Class:</strong> ${$('#classSelect option:selected').text()}</p>
+                    <p><strong>Date:</strong> ${$('#dateSelect option:selected').text()}</p>
+                    <p><strong>Trainer:</strong> ${trainerName}</p>
+                    <p><strong>Time:</strong> ${timeSlot}</p>
+                    <p><strong>Description:</strong> ${description || 'No description available.'}</p>
+                `;
+                $('#class_details').html(detailsHtml);
+            } else {
+                $('#class_details').html('<p class="text-muted">Select a trainer and time to view details.</p>');
+            }
+        }
+        {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                title: "{{ message.tags|title }}",
+                text: "{{ message }}",
+                icon: "{{ message.tags }}",
+                confirmButtonText: "ok",
+                
+            });
+        {% endfor %}
+    {% endif %}
+    });
+</script>
+{% endblock script %}

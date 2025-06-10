@@ -1,0 +1,86 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Background and layout */
+.user-register {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9)), url('../../images/user_pannel/working.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+/* Registration box */
+.register-box {
+    background: linear-gradient(rgb(0 0 10 / 94%), rgba(112, 109, 109, 0.7));
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    border-radius: 15px;
+    color: white;
+}
+
+/* Title */
+.user-title {
+    font-size: 26px;
+    font-weight: bold;
+    color: #fff;
+}
+
+/* Input fields */
+.custom-input {
+    height: 45px;
+    border-radius: 8px;
+    border: none;
+    padding: 0 15px;
+    font-size: 15px;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.custom-input::placeholder {
+    color: #666;
+}
+
+.custom-input:focus {
+    border: 2px solid #fff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+/* Button */
+button[type="submit"] {
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #e0e0e0;
+}
+
+input.is-invalid {
+    border-color: #dc3545;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+    .register-box {
+        padding: 20px;
+    }
+
+    .user-title {
+        font-size: 22px;
+    }
+
+    .custom-input {
+        font-size: 14px;
+    }
+}

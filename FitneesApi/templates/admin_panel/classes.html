@@ -1,0 +1,244 @@
+{% extends "admin_panel/base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-end mb-3">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#classModal">
+            <i class="fa-solid fa-plus"></i> Add Class
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover bg-white shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Class</th>
+                    <th>Description</th>
+                    <th>Trainer</th>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cls in classes %}
+                <tr>
+                    <td>{{ cls.C_name }}</td>
+                    <td class="description-cell" title="{{ cls.C_description }}">{{ cls.C_description|truncatechars:50 }}</td>
+                    <td>{{ cls.C_trainer.T_name }}</td>
+                    <td>{{ cls.C_date }}</td>
+                    <td>{{ cls.C_start_time }}</td>
+                    <td>{{ cls.C_end_time }}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm delete-class-btn" data-url="{% url 'classes_Delete' cls.C_id %}"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" class="text-center">No classes available</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="classModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="classModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content p-3 shadow-sm">
+            <div class="modal-header">
+                <h5 class="modal-title" id="classModalLabel">Add Schedule</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="" class="class_form" novalidate>
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Class Name</label>
+                            <select name="C_name" class="form-select">
+                                <option value="" selected disabled>Select Class Name</option>
+                                {% for value, label in category_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback">Please select a class name.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Trainer</label>
+                            <select name="C_trainer" class="form-select">
+                                <option value="" selected disabled>Select Trainer</option>
+                                {% for trainer in trainers %}
+                                <option value="{{ trainer.T_id }}">{{ trainer.T_name }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback">Please select a trainer.</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea name="C_description" rows="3" class="form-control"></textarea>
+                            <div class="invalid-feedback">Please enter a description.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Date</label>
+                            <input type="date" name="C_date" class="form-control" min="{{ current_date_iso }}">
+                            <div class="invalid-feedback">Please select a future or current date.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Start Time</label>
+                            <input type="time" name="C_start_time" class="form-control">
+                            <div class="invalid-feedback">Enter start time.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">End Time</label>
+                            <input type="time" name="C_end_time" class="form-control">
+                            <div class="invalid-feedback">End time must be after start time.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $(".class_form").on("submit", function (e) {
+            let isValid = true;
+            $(this).find("input, textarea, select").removeClass("is-invalid");
+
+            const classNameSelect = $("select[name='C_name']");
+            if (!classNameSelect.val()) {
+                classNameSelect.addClass("is-invalid");
+                isValid = false;
+            }
+
+            const trainerSelect = $("select[name='C_trainer']");
+            if (!trainerSelect.val()) {
+                trainerSelect.addClass("is-invalid");
+                isValid = false;
+            }
+
+            const descriptionTextarea = $("textarea[name='C_description']");
+            if (!descriptionTextarea.val().trim()) {
+                descriptionTextarea.addClass("is-invalid");
+                isValid = false;
+            }
+
+            const dateInput = $("input[name='C_date']");
+            const startTimeInput = $("input[name='C_start_time']");
+            const endTimeInput = $("input[name='C_end_time']");
+
+            const selectedDateStr = dateInput.val();
+            const selectedStartTimeStr = startTimeInput.val();
+            const selectedEndTimeStr = endTimeInput.val();
+
+            if (!selectedDateStr) {
+                dateInput.addClass("is-invalid");
+                dateInput.next(".invalid-feedback").text("Please select a date.");
+                isValid = false;
+            } else {
+                const selectedDate = new Date(selectedDateStr);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (selectedDate < today) {
+                    dateInput.addClass("is-invalid");
+                    dateInput.next(".invalid-feedback").text("Cannot select a past date.");
+                    isValid = false;
+                }
+            }
+
+            if (!selectedStartTimeStr) {
+                startTimeInput.addClass("is-invalid");
+                startTimeInput.next(".invalid-feedback").text("Please enter start time.");
+                isValid = false;
+            } else {
+                const selectedDate = new Date(selectedDateStr);
+                const selectedStartTime = new Date(`${selectedDateStr}T${selectedStartTimeStr}`);
+                const now = new Date();
+
+                if (selectedDate.toDateString() === now.toDateString()) {
+                    if (selectedStartTime < now) {
+                        startTimeInput.addClass("is-invalid");
+                        startTimeInput.next(".invalid-feedback").text("Cannot select a past time for today.");
+                        isValid = false;
+                    }
+                }
+            }
+
+            if (!selectedEndTimeStr) {
+                endTimeInput.addClass("is-invalid");
+                endTimeInput.next(".invalid-feedback").text("Please enter end time.");
+                isValid = false;
+            } else if (selectedStartTimeStr && selectedEndTimeStr) {
+                const startTime = new Date(`2000/01/01T${selectedStartTimeStr}`);
+                const endTime = new Date(`2000/01/01T${selectedEndTimeStr}`);
+
+                if (endTime <= startTime) {
+                    endTimeInput.addClass("is-invalid");
+                    endTimeInput.next(".invalid-feedback").text("End time must be after start time.");
+                    isValid = false;
+                }
+            }
+            
+            if (!isValid) {
+                e.preventDefault(); 
+            }
+        });
+
+        $("input, textarea, select").on("input change", function () {
+            $(this).removeClass("is-invalid");
+            if ($(this).attr('name') === 'C_date') {
+                $(this).next(".invalid-feedback").text("Please select a future or current date.");
+            } else if ($(this).attr('name') === 'C_start_time') {
+                $(this).next(".invalid-feedback").text("Enter start time.");
+            } else if ($(this).attr('name') === 'C_end_time') {
+                $(this).next(".invalid-feedback").text("End time must be after start time.");
+            }
+        });
+
+        {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                title: "{{ message.tags|title }}",
+                text: "{{ message }}",
+                icon: "{{ message.tags }}",
+                confirmButtonText: "Ok",
+                timer: 3000,
+                timerProgressBar: true
+            });
+        {% endfor %}
+        {% endif %}
+    });
+
+    $('.delete-class-btn').click(function (e) {
+        e.preventDefault();
+        const deleteUrl = $(this).data('url');
+        
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = deleteUrl;
+            }
+        });
+    });
+</script>
+{% endblock scripts %}

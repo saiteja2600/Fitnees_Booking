@@ -1,0 +1,153 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.main-nav {
+    background-color: #1f1f2e;
+    padding: 10px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.main-nav .navbar-brand {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.main-nav .navbar-brand .logo {
+    width: 40px;
+    height: 40px;
+}
+
+.main-nav .nav-link {
+    color: #dcdcdc;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.main-nav .nav-link:hover,
+.main-nav .nav-link.active {
+    color: #ffffff;
+}
+
+.main-nav .navbar-collapse {
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.main-nav .navbar-nav {
+    gap: 15px;
+    align-items: center;
+}
+
+.main-nav .btn {
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 8px;
+}
+
+/* Toggler */
+.navbar-toggler {
+    border: none;
+    outline: none;
+}
+
+.navbar-toggler-icon {
+    filter: invert(1);
+    /* Make the icon white */
+}
+
+.dashboard-card {
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease-in-out;
+}
+
+.bg-gradient-blue {
+    background: linear-gradient(45deg, #4facfe, #00f2fe);
+}
+
+.bg-gradient-green {
+    background: linear-gradient(45deg, #43e97b, #38f9d7);
+}
+
+.bg-gradient-orange {
+    background: linear-gradient(45deg, #f7971e, #ffd200);
+}
+
+.bg-gradient-pink {
+    background: linear-gradient(45deg, #f953c6, #b91d73);
+}
+
+.card-header {
+    font-weight: 600;
+    font-size: 1rem;
+}
+/* Calendar styling */
+.calendar-container {
+    background: linear-gradient(45deg, #43e97a6b, #00f3c670) ;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* FullCalendar custom colors */
+.fc .fc-toolbar-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1f1f2e;
+}
+
+.fc-button {
+    background-color: #077ce286 !important;
+    border: none !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    padding: 6px 12px !important;
+}
+
+.fc-button:hover {
+    background-color: #17a1c7b9 !important;
+}
+
+
+.fc-daygrid-event {
+    background-color: #f953c7af !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 2px 4px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    background: linear-gradient(45deg, #f953c6, #b91d73);
+}
+
+
+.fc-daygrid-event:hover {
+    opacity: 0.9;
+
+}
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    
+
+    .main-nav .nav-link {
+        margin-right: 0;
+        padding: 10px 0;
+    }
+
+    .login-button {
+        margin-top: 10px;
+    }
+
+    .main-nav .navbar-nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

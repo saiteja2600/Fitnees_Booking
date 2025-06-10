@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <!-- Bootstrap links -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+        crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous">
+    </script>
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.22.0/dist/sweetalert2.all.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.22.0/dist/sweetalert2.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{% static 'css/admin_css/style.css' %}">
+    
+    <link rel="shortcut icon" href="{% static 'images/fitnees.ico' %}" type="image/x-icon">
+
+    {% comment %} Font Awsome {% endcomment %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    {% comment %} JQuery cdn{% endcomment %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+{% comment %} JQuery calender {% endcomment %}
+
+ <!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.css" rel="stylesheet">
+
+<!-- FullCalendar JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.js"></script>
+
+<!-- Tippy.js for tooltips -->
+<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/light-border.css" />
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+
+ 
+
+
+    <title>Fitnees Studio - Admin</title>
+</head>
+<body>
+    <div class="page-wrapper d-flex flex-column min-vh-100">
+    <header>
+
+        <nav class="navbar navbar-expand-lg admin-nav">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'admin_Dashbord' %}"><img src="{% static 'images/fitness.png' %}" class="logo"
+                        alt="">Fitnees Studio</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'admin_Dashbord' %}">Dashbord</a>
+
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'Trainers' %}">Trainers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'Classes'%}">Schedules</a>
+                        </li>
+                        
+                    </ul>
+
+                    <div class="login-button">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'admin_logout' %}" class="btn btn-danger">Logout</a>
+                        {% else %}
+                        <a href="{% url 'admin_login' %}" class="btn btn-warning">Login</a>
+                        {% endif %}
+                    </div>
+                    
+                </div>
+            
+
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-grow-1">
+        
+            {% block content %}{% endblock content %}
+        
+    </main>
+    <footer class="footer  py-4 bg-dark text-white">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 text-center text-md-start">
+            <p class="mb-0">&copy; 2025 <strong>Fitness Studio</strong>. All rights reserved.</p>
+            <div class="social-icons d-flex gap-3">
+                <a href="#" class="text-white fs-5"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-white fs-5"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-white fs-5"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-white fs-5"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </footer>
+</div>
+
+</body>
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js" integrity="sha512-MSOo1aY+3pXCOCdGAYoBZ6YGI0aragoQsg1mKKBHXCYPIWxamwOE7Drh+N5CPgGI5SA9IEKJiPjdfqWFWmZtRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+{% endblock scripts %}
+</html>

@@ -1,0 +1,212 @@
+{% extends "admin_panel/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+
+    <!-- Top Cards -->
+    <div class="row g-4">
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="dashboard-card bg-gradient-blue d-flex align-items-center p-3">
+                <div class="icon me-3">
+                    <i class="fa-solid fa-user-check"></i>
+                </div>
+                <div class="info text-end w-100">
+                    <h4 class="mb-0">{{ total_trainers }}</h4>
+                    <p class="mb-0">Trainers</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="dashboard-card bg-gradient-green d-flex align-items-center p-3">
+                <div class="icon me-3">
+                    <i class="fa-solid fa-calendar"></i>
+                </div>
+                <div class="info text-end w-100">
+                    <h4 class="mb-0">{{ total_classes }}</h4>
+                    <p class="mb-0">Schedules</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="dashboard-card bg-gradient-orange d-flex align-items-center p-3">
+                <div class="icon me-3">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                </div>
+                <div class="info text-end w-100">
+                    <h4 class="mb-0">{{ total_bookings }}</h4>
+                    <p class="mb-0">Bookings</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="dashboard-card bg-gradient-pink d-flex align-items-center p-3">
+                <div class="icon me-3">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="info text-end w-100">
+                    <h4 class="mb-0">{{ available_slots }}</h4>
+                    <p class="mb-0">Available Slots</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tables Row -->
+    <div class="row g-4 mt-5">
+        <!-- Trainers Table -->
+        <div class="col-md-4 shadow p-3 mb-5 bg-white rounded">
+            <div class="card shadow border-0 h-100">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0">Trainers</h6>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover align-middle text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for trainer in trainers %}
+                            <tr>
+                                <td>{{ trainer.T_name }}</td>
+                                <td>{{ trainer.T_email }}</td>
+                                <td>{{ trainer.T_phone }}</td>
+                               
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No trainers found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedules Table -->
+        <div class="col-md-4 shadow p-3 mb-5 bg-white rounded">
+            <div class="card shadow border-0 h-100">
+                <div class="card-header bg-success text-white">
+                    <h6 class="mb-0">Schedules</h6>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover align-middle text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Trainer</th>
+                                <th>Class</th>
+                                <th>Date</th>
+                                <th>Start</th>
+                                <th>End</th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cls in classes %}
+                            <tr>
+                                <td>{{ cls.C_trainer.T_name }}</td>
+                                <td>{{ cls.C_name }}</td>
+                                <td>{{ cls.C_date }}</td>
+                                <td>{{ cls.C_start_time }}</td>
+                                <td>{{ cls.C_end_time }}</td>
+                               
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No schedules found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bookings Table -->
+        <div class="col-md-4 shadow p-3 mb-5 bg-white rounded">
+            <div class="card shadow border-0 h-100">
+                <div class="card-header bg-warning text-white">
+                    <h6 class="mb-0">Bookings</h6>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover align-middle text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Client</th>
+                                <th>Class</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in bookings %}
+                            <tr>
+                                <td>{{ booking.client_name }}</td>
+                                <td>{{ booking.classes.C_name }}</td>
+                                <td>{{ booking.classes.C_date }}</td>
+                                <td>
+                                    {{ booking.classes.C_start_time }} - {{ booking.classes.C_end_time }} 
+                                </td>
+                              
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No bookings found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of Tables Row -->
+     <div class="row g-4 mt-5">
+        <div class="col-md-12 shadow p-3 mb-5 bg-white rounded">
+            <h4 class="text-center mb-4 fs-130 fw-bold  ">Upcoming Classes</h4>
+            <div id="calendar" class="calendar-container shadow p-3 mb-5 bg-white rounded"></div>
+        </div>
+    
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: "{% url 'get_available_classes' %}",
+            eventDidMount: function (info) {
+                if (info.event.extendedProps.description) {
+                    // Tooltip
+                    tippy(info.el, {
+                        content: info.event.extendedProps.description,
+                        placement: 'top',
+                        animation: 'shift-away',
+                        theme: 'light-border'
+                    });
+                }
+            },
+            height: 'auto',
+        });
+
+        calendar.render();
+    });
+</script>
+
+
+{% endblock scripts %}

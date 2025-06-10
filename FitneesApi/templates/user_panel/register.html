@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{% static 'images/fitnees.ico' %}" type="image/x-icon">
+    <!-- Bootstrap links -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+  crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous">
+</script>
+<!-- SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.22.0/dist/sweetalert2.all.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.22.0/dist/sweetalert2.min.css">
+
+ {% comment %} JQuery cdn{% endcomment %}
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<link rel="stylesheet" href="{% static 'css/user_css/register.css' %}">
+    <title>Fitnees Studio</title>
+</head>
+<body>
+    <div class="user-register d-flex justify-content-center align-items-center">
+        <div class="register-box text-center p-4 rounded shadow">
+            <h4 class="user-title mb-4">Register</h4>
+            <form action="" method="post" class="register-form" novalidate>
+                {% csrf_token %}
+                <div class="mb-3 text-start">
+                    <input type="text" name="username" placeholder="Full Name"
+                           value="{{ old.name }}" class="form-control custom-input {% if errors.name %}is-invalid{% endif %}">
+                    {% if errors.name %}
+                    <div class="invalid-feedback">{{ errors.name }}</div>
+                    {% endif %}
+                </div>
+            
+                <div class="mb-3 text-start">
+                    <input type="email" name="email" placeholder="Email Address"
+                           value="{{ old.email }}" class="form-control custom-input {% if errors.email %}is-invalid{% endif %}">
+                    {% if errors.email %}
+                    <div class="invalid-feedback">{{ errors.email }}</div>
+                    {% endif %}
+                </div>
+            
+                <div class="mb-3 text-start">
+                    <input type="password" name="password" placeholder="Password"
+                           class="form-control custom-input {% if errors.password %}is-invalid{% endif %}">
+                    {% if errors.password %}
+                    <div class="invalid-feedback">{{ errors.password }}</div>
+                    {% endif %}
+                </div>
+            
+                <div class="mb-3 text-start">
+                    <input type="password" name="conf_password" placeholder="Confirm Password"
+                           class="form-control custom-input {% if errors.conf_password %}is-invalid{% endif %}">
+                    {% if errors.conf_password %}
+                    <div class="invalid-feedback">{{ errors.conf_password }}</div>
+                    {% endif %}
+                </div>
+            
+                <button type="submit" class="btn btn-light w-100 fw-bold">Register</button>
+            </form>
+            
+        </div>
+    </div>
+   
+        
+</body>
+</html>
