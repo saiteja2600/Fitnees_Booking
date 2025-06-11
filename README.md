@@ -1,3 +1,5 @@
+🏋️‍♂️ Fitness Studio Booking System
+
 A web-based application for managing a fitness studio, built using Django. It provides two separate panels:
     • Admin Panel: To manage trainers, classes, and class schedules.
     • User Panel: To register, log in, view class schedules, and book fitness sessions.
