@@ -18,7 +18,6 @@ from django.conf import settings
 
 
 
-# Create your views here.
 def user_login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -31,7 +30,7 @@ def user_login(request):
                 request.session['user_id'] = user.id
                 request.session['email'] = user.email
                 messages.success(request, 'Login Successful')
-                return redirect('Dashbord')  # use 'Dashbord' if that's the correct URL name
+                return redirect('Dashbord')  
             else:
                 messages.error(request, 'Invalid password')
         except Register.DoesNotExist:
@@ -88,7 +87,7 @@ def user_register(request):
         return redirect('user_login')  # Ensure this name matches your URL pattern
 
     return render(request, 'user_panel/register.html')
-@login_required(login_url='user_login')
+
 def index(request):
     if 'user_id' not in request.session:
         return redirect('user_login')
