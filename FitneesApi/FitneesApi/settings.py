@@ -35,8 +35,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "core",
     "Fitnees",
-    "Fitnees_Admin"
+    "Fitnees_Admin",
 ]
 
 MIDDLEWARE = [
