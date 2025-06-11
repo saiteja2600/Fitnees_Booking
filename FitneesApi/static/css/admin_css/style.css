@@ -151,11 +151,17 @@
 }
 
 
-td.description-cell {
+/* td.description-cell {
     max-width: 300px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+} */
+td.description-cell {
+    white-space: normal !important;
+    word-wrap: break-word;
+    max-width: 300px;
+    /* Adjust this as needed */
 }
 
 /* Calendar styling */

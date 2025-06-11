@@ -9,7 +9,7 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table table-bordered table-hover bg-white shadow-sm">
+        <table class="table table-bordered table-hover bg-white shadow-sm text-center">
             <thead class="table-dark">
                 <tr>
                     <th>Class</th>
@@ -25,7 +25,8 @@
                 {% for cls in classes %}
                 <tr>
                     <td>{{ cls.C_name }}</td>
-                    <td class="description-cell" title="{{ cls.C_description }}">{{ cls.C_description|truncatechars:50 }}</td>
+                    <td class="description-cell">{{ cls.C_description }}</td>
+
                     <td>{{ cls.C_trainer.T_name }}</td>
                     <td>{{ cls.C_date }}</td>
                     <td>{{ cls.C_start_time }}</td>
