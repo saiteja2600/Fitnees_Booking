@@ -16,7 +16,7 @@ urlpatterns = [
     path('get_trainers_and_times_by_class_and_date/', views.get_trainers_and_times_by_class_and_date, name='get_trainers_and_times_by_class_and_date'),
    #Schedule
    path("Schedule/",views.schedule,name='Schedule'),
-   path("get-available-classes/", views.get_available_classes_events, name="get_available_classes"),
+   path("get_available_classes_events/", views.get_available_classes_events, name="get_available_classes_events"),
 
 
 ]

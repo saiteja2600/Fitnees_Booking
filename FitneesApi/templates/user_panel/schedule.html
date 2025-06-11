@@ -19,7 +19,7 @@
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
-            events: "{% url 'get_available_classes' %}",
+            events: "{% url 'get_available_classes_events' %}",
             eventDidMount: function (info) {
                 if (info.event.extendedProps.description) {
                     // Tooltip
