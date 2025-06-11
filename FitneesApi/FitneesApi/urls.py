@@ -28,7 +28,7 @@ urlpatterns = [
     path('Fitnees-Studio/admin/', include('Fitnees_Admin.urls')),
 
    
-    path('Fitnees-Studio/user/', include('Fitnees.urls')),
+    path('Fitnees-Studio/', include('Fitnees.urls')),
 
    
     path('admin/', admin.site.urls),
