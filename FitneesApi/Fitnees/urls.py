@@ -3,10 +3,10 @@ from Fitnees import views
 
 
 urlpatterns = [
-    path("User-Login/",views.user_login,name='user_login'),
-    path("User-Logout/", views.user_logout, name='user_logout'),
+    path("Login/",views.user_login,name='user_login'),
+    path("Logout/", views.user_logout, name='user_logout'),
 
-    path("User-Register/",views.user_register,name='Register'),
+    path("Register/",views.user_register,name='Register'),
     # Dashbord
     path("Dashbord/", views.index, name="Dashbord"),
     
