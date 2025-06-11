@@ -10,9 +10,16 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail, EmailMessage
 from django.conf import settings
+from functools import wraps
 
-
-
+# --- Custom session-based login decorator ---
+def user_session_required(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if 'user_id' not in request.session:
+            return redirect('user_login')
+        return view_func(request, *args, **kwargs)
+    return wrapper
 
 
 
@@ -87,7 +94,7 @@ def user_register(request):
         return redirect('user_login')  # Ensure this name matches your URL pattern
 
     return render(request, 'user_panel/register.html')
-
+@user_session_required
 def index(request):
     if 'user_id' not in request.session:
         return redirect('user_login')
@@ -107,7 +114,7 @@ def index(request):
 
     return render(request, "user_panel/index.html", context)
 
-@login_required(login_url='user_login')
+@user_session_required
 def avaliableclasses(request):
     if 'user_id' not in request.session:
         return redirect('user_login')
@@ -184,13 +191,13 @@ def avaliableclasses(request):
     
     classes = Classes.objects.values('C_name').distinct()
     return render(request, 'user_panel/available_classes.html', {'classes': classes})
-@csrf_exempt
+@user_session_required
 def get_trainers_by_class(request):
     class_name = request.GET.get('class_name')
     trainers = Trainer.objects.filter(classes__C_name=class_name).values('T_id', 'T_name')
     return JsonResponse(list(trainers), safe=False)
 
-@csrf_exempt
+@user_session_required
 def get_dates_by_class(request):
     class_name = request.GET.get('class_name')
     if class_name:
@@ -198,7 +205,7 @@ def get_dates_by_class(request):
         formatted_dates = [{'date': d['C_date'].strftime('%Y-%m-%d'), 'display': d['C_date'].strftime('%A, %B %d, %Y')} for d in dates]
         return JsonResponse(formatted_dates, safe=False)
     return JsonResponse([], safe=False)
-@csrf_exempt
+@user_session_required
 def get_trainers_and_times_by_class_and_date(request):
     class_name = request.GET.get('class_name')
     selected_date_str = request.GET.get('selected_date')
@@ -225,12 +232,12 @@ def get_trainers_and_times_by_class_and_date(request):
         except ValueError:
             return JsonResponse({'error': 'Invalid date format'}, status=400)
     return JsonResponse([], safe=False)
-@login_required(login_url='user_login')
+@user_session_required
 def schedule(request):
     return render(request,'user_panel/schedule.html')
 
 
-@csrf_exempt
+@user_session_required
 def get_available_classes_events(request):
     today = date.today()
     classes = Classes.objects.filter(C_date__gte=today).select_related('C_trainer')
