@@ -17,19 +17,22 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from core import views
+from core import views  # your global home view
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-
-
-
-
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path('Fitnees-Studio/', views.global_home, name='home_page'),
-     path('', views.global_home, name='global_home'),
-     path('Fitnees-Studio/admin/', include('Fitnees_Admin.urls')),
-   path('Fitnees-Studio/user/', include('Fitnees.urls')),
+   
+    path('', views.global_home, name='global_home'),
+
+   
+    path('Fitnees-Studio/admin/', include('Fitnees_Admin.urls')),
+
+   
+    path('Fitnees-Studio/user/', include('Fitnees.urls')),
+
+   
+    path('admin/', admin.site.urls),
 ]
+
 urlpatterns += staticfiles_urlpatterns()
 

@@ -19,7 +19,6 @@ from django.conf import settings
 
 
 # Create your views here.
-@login_required(login_url='user_login')
 def user_login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
