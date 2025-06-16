@@ -116,12 +116,10 @@ def index(request):
 
 @user_session_required
 def avaliableclasses(request):
-    if 'user_id' not in request.session:
-        return redirect('user_login')
-    
-   
-    
     if request.method == 'POST':
+        user_id = request.session.get('user_id')
+        user = Register.objects.get(id=user_id)  # Get logged-in user
+
         client_name = request.POST.get('client_name')
         client_email = request.POST.get('client_email')
         classes_id = request.POST.get('classes') 
@@ -130,67 +128,61 @@ def avaliableclasses(request):
             selected_class_instance = Classes.objects.get(C_id=classes_id)
             
             if avaliable_classes.objects.filter(
-                client_email=client_email, 
+                user=user,
                 classes=selected_class_instance
             ).exists():
                 messages.error(request, 'You have already booked this specific class slot.')
                 return redirect('Available_Classes')
                 
-            else:
-                # Create the booking first
-                booking = avaliable_classes.objects.create(
-                    client_name=client_name,
-                    client_email=client_email,
-                    classes=selected_class_instance,
-                    trainer=selected_class_instance.C_trainer 
+            booking = avaliable_classes.objects.create(
+                user=user,  # Associate booking with logged-in user
+                client_name=client_name,
+                client_email=client_email,
+                classes=selected_class_instance,
+                trainer=selected_class_instance.C_trainer 
+            )
+
+            # Email sending logic...
+            subject = "Slot Booking Confirmation - Fitness Studio"
+            message = f"""
+            <div style="font-family: Arial, sans-serif; font-size: 16px;">
+                <p>Hi {client_name},</p>
+                <p>Your booking is <strong>confirmed</strong>!</p>
+                <ul>
+                    <li><strong>Class:</strong> {selected_class_instance.C_name}</li>
+                    <li><strong>Trainer:</strong> {selected_class_instance.C_trainer.T_name}</li>
+                    <li><strong>Date:</strong> {selected_class_instance.C_date.strftime('%A, %B %d, %Y')}</li>
+                    <li><strong>Time:</strong> {selected_class_instance.C_start_time.strftime('%I:%M %p')} to {selected_class_instance.C_end_time.strftime('%I:%M %p')}</li>
+                </ul>
+                <p>Thank you for choosing <strong>Fitness Studio</strong>.</p>
+            </div>
+            """
+
+            try:
+                email = EmailMessage(
+                    subject=subject,
+                    body=message,
+                    from_email=settings.EMAIL_HOST_USER,
+                    to=[client_email],
                 )
-                
-                # Prepare email content
-                subject = "Slot Booking Confirmation - Fitness Studio"
-                message = f"""
-                <div style="font-family: Arial, sans-serif; font-size: 16px;">
-                    <p>Hi {client_name},</p>
-                    <p>Your booking is <strong>confirmed</strong>!</p>
-                    <p><strong>Details:</strong></p>
-                    <ul>
-                        <li><strong>Class:</strong> {selected_class_instance.C_name}</li>
-                        <li><strong>Trainer:</strong> {selected_class_instance.C_trainer.T_name}</li>
-                        <li><strong>Date:</strong> {selected_class_instance.C_date.strftime('%A, %B %d, %Y')}</li>
-                        <li><strong>Time:</strong> {selected_class_instance.C_start_time.strftime('%I:%M %p')} to {selected_class_instance.C_end_time.strftime('%I:%M %p')}</li>
-                    </ul>
-                    <p>Thank you for choosing <strong>Fitness Studio</strong>.</p>
-                    <p>See you there!</p>
-                </div>
-                """
-                
-                try:
-                    # Send email
-                    email = EmailMessage(
-                        subject=subject,
-                        body=message,
-                        from_email=settings.EMAIL_HOST_USER,
-                        to=[client_email],  # Use the client_email from the form
-                        reply_to=[settings.DEFAULT_FROM_EMAIL],
-                    )
-                    email.content_subtype = "html"  # Set content as HTML
-                    email.send()
-                    
-                    messages.success(request, 'Slot booked successfully! Confirmation email sent.')
-                except Exception as e:
-                    # If email fails, still keep the booking but show warning
-                    messages.warning(request, f'Slot booked but email could not be sent: {str(e)}')
-                
-                return redirect('Dashbord')
-                
+                email.content_subtype = "html"
+                email.send()
+                messages.success(request, 'Slot booked successfully! Confirmation email sent.')
+            except Exception as e:
+                messages.warning(request, f'Slot booked but email could not be sent: {str(e)}')
+
+            return redirect('Dashbord')
+
         except Classes.DoesNotExist:
-            messages.error(request, "Selected class does not exist. Please try again.")
+            messages.error(request, "Selected class does not exist.")
         except Exception as e:
-            messages.error(request, f"An unexpected error occurred: {str(e)}")
-        
+            messages.error(request, f"Unexpected error: {str(e)}")
+
         return redirect('Available_Classes')
-    
+
     classes = Classes.objects.values('C_name').distinct()
     return render(request, 'user_panel/available_classes.html', {'classes': classes})
+
 @user_session_required
 def get_trainers_by_class(request):
     class_name = request.GET.get('class_name')
